@@ -1,0 +1,150 @@
+<!-- [START ice_breaker_bingo] -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <link rel="stylesheet" href="https://ssl.gstatic.com/docs/script/css/add-ons1.css">
+    <!-- The CSS package above applies Google styling to buttons and other elements. -->
+
+    <style>
+      .width-100 {
+          width: 100%;
+      }
+    </style>x
+  </head>
+  <body>
+    <div class="sidebar">
+      <form>
+        <div class="block">
+          <label for="board-title-text"><b>Board Title</b></label>
+          <textarea class="width-100" id="board-title-text" rows="1">Example Title</textarea>
+
+          <label for="free-space-text"><b>Free Space</b></label>
+          <textarea class="width-100" id="free-space-text" rows="1">FREE</textarea>
+
+          <label for="rules-text"><b>Rules</b></label>
+          <textarea class="width-100" id="rules-text" rows="3"></textarea>
+
+          <label for="tile-text"><b>Tiles</b></label>
+          <textarea class="width-100" id="tile-text-0" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-1" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-2" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-3" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-4" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-5" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-6" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-7" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-8" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-9" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-10" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-11" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-12" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-13" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-14" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-15" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-16" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-17" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-18" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-19" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-20" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-21" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-22" rows="1"></textarea>
+          <textarea class="width-100" id="tile-text-23" rows="1"></textarea>
+          
+          <label for="board-count"><b>Number of Boards</b></label>
+          <div class="block">
+            <input type="number" name="board-count" min="1" max="100" value="10">
+          </div>
+        </div>
+        <div class="block" id="button-bar">
+          <button class="blue" id="run-generation">Generate</button>
+        </div>
+      </form>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+      /**
+       * On document load, assign click handlers to each button and try to load the
+       * user's origin and destination language preferences if previously set.
+       */
+      $(function() {
+          var default_rules = [
+              "The first person to get BINGO gets a prize!",
+              "Find someone who fulfills a clue and have them sign their initials in that square.",
+              "Each person can only initial one square per board.",
+              "You may NOT initial a square on your own board."
+          ];
+          
+          var default_tiles = [
+              'Has made ice cream by hand',
+              'Can run a mile in under 8 minutes',
+              'Speaks another language',
+              'Has broken a bone',
+              'Showered this morning',
+              'Has more than three kids',
+              'Hates apple sauce',
+              'Has jumped out of a plane',
+              'Has a fantasy football team',
+              'Is afraid of spiders',
+              'Has not been outside the country',
+              "Doesn't like white wine",
+              'Has no tattoos',
+              'Has served or is enlisted',
+              'Teaches at a school',
+              'Has built a snowman',
+              'Loves cranberry sauce',
+              'Born outside the USA',
+              'Is self employed',
+              "Doesn't drink coffee",
+              'Knows pi to ten digits',
+              'Can recite the ABCs backward',
+              'Has more than one dog',
+              'Plays an instrument'
+          ];
+
+          $('#run-generation').click(runGeneration);
+          $('textarea#rules-text').val(default_rules.join('\n'));
+          for (var i = 0; i < 24; i++) {
+              $('textarea#tile-text-' + i).val(default_tiles[i]);
+          }
+      });
+      
+      function runGeneration() {
+          this.disabled = true;
+          
+          var free_space_text = $('textarea#free-space-text').val();
+          var board_title_text = $('textarea#board-title-text').val();
+          var rules_text = $('textarea#rules-text').val().split('\n').filter(Boolean);                
+          var board_count = $('input[name="board-count"]').val();
+
+          var tiles = [];
+          for (var i = 0; i < 24; i++) {
+              var tile_text = $('textarea#tile-text-' + i).val();
+              tiles.push(tile_text);
+          }
+          
+          var board_config = {
+              title : board_title_text,
+              free_space : free_space_text,
+              rules: rules_text,
+              tiles: tiles,
+              board_count: board_count
+          };
+          
+          google.script.run
+              .withSuccessHandler(
+                  function(unused, element) {
+                      element.disabled = false;
+                  })
+              .withFailureHandler(
+                  function(unused, element) {
+                      element.disabled = false;
+                  })
+              .withUserObject(this)
+              .beginGenerateBoard(board_config);
+      }
+    </script>
+  </body>
+</html>
+<!-- [END ice_breaker_bingo] -->
